@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  jenkins-master:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myjenkins-master
+    container_name: jenkins-master
+    restart: on-failure
+    networks:
+      - jenkins
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+
+  jenkins-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile-jenkins-agent
+    image: jenkins-agent-image
+    container_name: jenkins-agent
+    ports:
+      - "22:22"
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMCjukHo7+81+dOF7U2PCJHtHDWMKKFZlZp4YqwJBJkb hugop@Hugos-Macbook-Pro-3.local
+    networks:
+      - jenkins
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins:/home/jenkins
+
+  registry:
+    image: registry:2
+    container_name: private_registry
+    ports:
+      - "5001:5000"
+    volumes:
+      - registry_data:/var/lib/registry
+    restart: always
+    networks:
+      - jenkins
+
+networks:
+  jenkins:
+    driver: bridge
+
+volumes:
+  jenkins-data:
+  jenkins-docker-certs:
+  agent_workdir:
+  registry_data:

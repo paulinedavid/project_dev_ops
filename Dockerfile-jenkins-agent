@@ -1,0 +1,20 @@
+# Use the Jenkins SSH Agent image as the base
+FROM jenkins/ssh-agent:jdk17
+
+# Install Docker CLI in the agent container
+USER root
+RUN apt-get update && \
+    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release software-properties-common && \
+    curl -fsSL https://get.docker.com | sh
+
+# Install sudo and allow jenkins user to run commands as root
+RUN apt-get install -y sudo && \
+    echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+
+RUN mkdir -p /home/jenkins/workspace && chown -R jenkins:jenkins /home/jenkins
+
+# Add jenkins user to the docker group
+# RUN groupadd -f docker && usermod -aG docker jenkins
+RUN usermod -aG docker jenkins
+RUN newgrp docker

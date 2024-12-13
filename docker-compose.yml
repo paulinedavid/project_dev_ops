@@ -27,7 +27,7 @@ services:
     ports:
       - "22:22"
     environment:
-      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMCjukHo7+81+dOF7U2PCJHtHDWMKKFZlZp4YqwJBJkb hugop@Hugos-Macbook-Pro-3.local
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC8GC0HTjJVgM+H0ricsOtZKJ1UM5UAxtxKF8cmiJdvp+PmpSVtvDKC7lLXGSaNmECl4Os9Ta+O+g6rOV8zArNDufvZGMR90rQU1WM16XuCFqkvLQsGTLNXNOjjXAmRJG0ZDPAs0sZP1Y9aNo/j5O5uv19qVlm6gz1lNKIk65z3Qc/tcd22EMlWZkDCFTMF8vEFL/a7m/tZ6N1pOhC+9SVVL+CWS9zr/yZxLmZIDmcU+gWt0BERjvvRXxCckjpnNwMKrjHUT9cWFrzRosqdmgsVMb6GgBCsdGnOIYslNUp/4liYm+haxxQqphCxRW4mEm797OVIcGoqQDiFcC1q3ViRsEy2u+GYc9D8yh6XHRNyIh+773lnzwXdcgdCdA7bc5o60fKaQ3FC2/aTcCjEJ35kx8an9+7hwDtiQ20GBskufrj8AMNcrtE51U3Cz1LfBR1F7yMyiQPiytjXgiNIUsy2iBOqSfv32elTstWsCOuFT8vJWd18Qi/8YMIqTaFpvZU= hugop@Hugos-Macbook-Pro-3.local
     networks:
       - jenkins
     restart: always

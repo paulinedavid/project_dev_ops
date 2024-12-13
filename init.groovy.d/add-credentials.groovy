@@ -21,4 +21,13 @@ creds = new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL,
                                     '', // passphrase
                                     '') // description
 
+dockerCredentials = new UsernamePasswordCredentialsImpl(
+    CredentialsScope.GLOBAL,
+    'dockerCredentials', // credentialsId
+    'Docker Hub credentials', // description
+    '', // username
+    '' // password
+)
+
 credentials_store.addCredentials(global_domain, creds)
+credentials_store.addCredentials(global_domain, dockerCredentials)

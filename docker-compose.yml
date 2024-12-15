@@ -33,7 +33,6 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./jenkins:/home/jenkins
 
   registry:
     image: registry:2

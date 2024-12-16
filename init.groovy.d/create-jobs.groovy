@@ -20,4 +20,18 @@ if (pipelineJob == null) {
     pipelineJob.save()
 }
 
+def pipelineJobNameKub = 'my-pipeline-job-kubernetes'
+def pipelineJobKub = instance.getItem(pipelineJobNameKub)
+
+// charger le script de pipeline depuis un fichier externe
+def pipelineScriptFromFileKub = new File('/usr/share/jenkins/ref/jobs/pipelineKubernetes.groovy').text
+
+if (pipelineJobKub == null) {
+    pipelineJobKub = instance.createProject(WorkflowJob, pipelineJobNameKub)
+    def pipelineScriptKub = pipelineScriptFromFileKub
+    def flowDefinitionKub = new CpsFlowDefinition(pipelineScriptKub, true)
+    pipelineJobKub.setDefinition(flowDefinitionKub)
+    pipelineJobKub.save()
+}
+
 instance.save()

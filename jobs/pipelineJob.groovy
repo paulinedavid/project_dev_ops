@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           dir('webapi') {
-            webApiImage = docker.build("hugopanel/devopswebapi")
+            webApiImage = docker.build("paulinedav/devopswebapi")
           }
         }
       }

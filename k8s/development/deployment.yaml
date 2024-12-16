@@ -20,16 +20,16 @@ spec:
       - name: webapi
         image: paulinedav/devopswebapi:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 8081
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 8081
           initialDelaySeconds: 10
           periodSeconds: 20

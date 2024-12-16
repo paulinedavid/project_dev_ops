@@ -16,7 +16,7 @@ pipeline {
           deleteDir()
           sh 'sudo chmod 777 /var/run/docker.sock'
           sh 'git config --global --add safe.directory /home/jenkins/workspace/my-pipeline-job'
-          git branch: 'main', url: 'https://github.com/paulinedavid/project_dev_ops.git'
+          git branch: 'kuberntes', url: 'https://github.com/paulinedavid/project_dev_ops.git'
         }
       }
     }

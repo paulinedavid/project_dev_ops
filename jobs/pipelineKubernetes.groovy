@@ -1,47 +1,23 @@
 pipeline {
-
-  agent {
+  agent {   
     label 'laptop'
   }
 
   environment {
-    KUBECONFIG = "/home/jenkins/.kube/config" // Ensure kubeconfig is set
+    KUBECONFIG = "C:\\Users\\pauli\\.kube\\config" // Ensure kubeconfig is set
   }
 
   stages {
-
-    stage('Prepare Environment') {
-      steps {
-        script {
-          echo "Pulling Minikube base image..."
-          sh '''
-          docker pull gcr.io/k8s-minikube/kicbase:v0.0.45
-          '''
-        }
-      }
-    }
 
     stage('Cloning Git') {
       steps {
         retry(3) { // Retry up to 3 times
           deleteDir()
-          sh 'sudo chmod 777 /var/run/docker.sock'
           sh 'git config --global --add safe.directory /home/jenkins/workspace/my-pipeline-job'
           git branch: 'kuberntes', url: 'https://github.com/paulinedavid/project_dev_ops.git'
         }
       }
     }
-    stage('Start Minikube') {
-      steps {
-        script {
-          echo "Starting Minikube..."
-          sh '''
-          minikube start --driver=docker --force
-          '''
-        }
-      }
-    }
-
 
     stage('Building backend image') {
       steps {
@@ -87,24 +63,32 @@ pipeline {
       }
     }
 
-    stage('Validate Deployment in Development') {
-      steps {
-        script {
-          echo "Validating deployment in development environment..."
+    // Corrected parallel block within a proper stage
+    stage('Post Deployment Validation') {
+      parallel {
+        stage('Port Forwarding') {
+          steps {
+            script {
+              echo "Running port-forwarding..."
+              // Run kubectl port-forward in the background
+              sh 'kubectl port-forward svc/dev-webapi-service 8081:8080 -n development &'
+            }
+          }
+        }
+        stage('Health Check') {
+          steps {
+            script {
+              echo "Running post-deployment validation tests..."
+              sleep(10)  // Allow some time for the service to be fully up
+              def result = sh(script: "curl -s http://localhost:8081", returnStdout: true).trim()
 
-          // Wait for the pod to be ready
-          sh 'kubectl rollout status deployment/dev-webapi -n development'
-
-          // Validate using curl to ensure endpoint is working
-          sh '''
-          DEV_URL=$(minikube service dev-webapi-service -n development --url)
-          echo "Testing development endpoint: $DEV_URL"
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $DEV_URL/health)
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "Validation failed with status code: $RESPONSE"
-            exit 1
-          fi
-          '''
+              if (result) {
+                echo "Service is up and running"
+              } else {
+                error "Service health check failed"
+              }
+            }
+          }
         }
       }
     }

@@ -20,4 +20,5 @@ spec:
       - name: webapi
         image: paulinedav/devopswebapi:latest
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
+          hostPort: 8081

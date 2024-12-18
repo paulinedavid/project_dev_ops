@@ -7,7 +7,8 @@ spec:
   selector:
     app: webapi
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8081
-  type: ClusterIP
+    - protocol: TCP
+      port: 8080        # Port exposé dans le service
+      targetPort: 8080  # Port du container
+      nodePort: 30001    # Port exposé sur le nœud
+  type: NodePort

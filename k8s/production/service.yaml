@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: prod-webapi-service
-  namespace: production
+  name: dev-webapi-service
+  namespace: development
 spec:
   selector:
     app: webapi
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8081
-  type: ClusterIP
+    - protocol: TCP
+      port: 8080        # Port exposé dans le service
+      targetPort: 8080  # Port du container
+      nodePort: 8081    # Port exposé sur le nœud
+  type: NodePort

@@ -1,14 +1,25 @@
 pipeline {
 
   agent {
-    label 'agent'
+    label 'laptop'
   }
 
   environment {
-    KUBECONFIG = "$HOME/.kube/config" // Ensure kubeconfig is set
+    KUBECONFIG = "/home/jenkins/.kube/config" // Ensure kubeconfig is set
   }
 
   stages {
+
+    stage('Prepare Environment') {
+      steps {
+        script {
+          echo "Pulling Minikube base image..."
+          sh '''
+          docker pull gcr.io/k8s-minikube/kicbase:v0.0.45
+          '''
+        }
+      }
+    }
 
     stage('Cloning Git') {
       steps {
@@ -20,6 +31,17 @@ pipeline {
         }
       }
     }
+    stage('Start Minikube') {
+      steps {
+        script {
+          echo "Starting Minikube..."
+          sh '''
+          minikube start --driver=docker --force
+          '''
+        }
+      }
+    }
+
 
     stage('Building backend image') {
       steps {

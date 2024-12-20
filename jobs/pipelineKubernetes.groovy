@@ -13,7 +13,6 @@ pipeline {
       steps {
         retry(3) { // Retry up to 3 times
           deleteDir()
-          sh 'git config --global --add safe.directory /home/jenkins/workspace/my-pipeline-job'
           git branch: 'kuberntes', url: 'https://github.com/paulinedavid/project_dev_ops.git'
         }
       }

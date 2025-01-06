@@ -1,0 +1,31 @@
+# serverFiles:
+#   alerting_rules.yml:
+#     groups:
+#       - name: KubernetesAlerts
+#         rules:
+#           - alert: KubernetesPodNotHealthy
+#             expr: sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"}) > 0
+#             for: 1m
+#             labels:
+#               severity: critical
+#             annotations:
+#               summary: Kubernetes Pod not healthy (instance {{ $labels.instance }})
+#               description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-running state for longer than 1 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-alerts
+  namespace: monitoring
+spec:
+  groups:
+  - name: kubernetes
+    rules:
+    - alert: PodNotRunning
+      expr: kube_pod_status_phase{phase!="Running"} > 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Pod {{ $labels.pod }} is not running"
+        description: "Pod {{ $labels.pod }} has been in a non-running state for more than 1 minute."
+

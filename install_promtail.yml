@@ -1,0 +1,84 @@
+- name: Install and configure Promtail for Loki
+  hosts: all
+  become: yes
+  tasks:
+    - name: Download Promtail binary
+      get_url:
+        url: "https://github.com/grafana/loki/releases/download/v2.9.1/promtail-linux-amd64.zip"
+        dest: /tmp/promtail.zip
+
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+
+    - name: Unzip Promtail binary
+      unarchive:
+        src: /tmp/promtail.zip
+        dest: /usr/local/bin/
+        remote_src: yes
+        extra_opts: [ '-j' ]
+
+    - name: Make Promtail binary executable
+      file:
+        path: /usr/local/bin/promtail-linux-amd64
+        mode: '0755'
+        state: file
+
+    - name: Rename Promtail binary
+      command: mv /usr/local/bin/promtail-linux-amd64 /usr/local/bin/promtail
+
+    - name: Create Promtail configuration directory
+      file:
+        path: /etc/promtail
+        state: directory
+        mode: '0755'
+
+    - name: Create Promtail configuration file
+      copy:
+        dest: /etc/promtail/config.yml
+        content: |
+          server:
+            http_listen_port: 9080
+            grpc_listen_port: 0
+
+          positions:
+            filename: /var/log/positions.yaml
+
+          clients:
+            - url: http://<LOKI_SERVICE_URL>:3100/loki/api/v1/push
+
+          scrape_configs:
+            - job_name: system
+              static_configs:
+                - targets:
+                    - localhost
+                  labels:
+                    job: varlogs
+                    host: {{ ansible_hostname }}
+                    __path__: /var/log/*log
+
+    - name: Create Promtail systemd service file
+      copy:
+        dest: /etc/systemd/system/promtail.service
+        content: |
+          [Unit]
+          Description=Promtail Service
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart=/usr/local/bin/promtail -config.file=/etc/promtail/config.yml
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd to register Promtail service
+      command: systemctl daemon-reload
+
+    - name: Enable and start Promtail service
+      systemd:
+        name: promtail
+        enabled: yes
+        state: started

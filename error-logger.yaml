@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: error-logger
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: error-logger
+  template:
+    metadata:
+      labels:
+        app: error-logger
+    spec:
+      containers:
+      - name: error-logger
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - >
+          while true; do
+            echo "INFO: This is a normal log";
+            echo "ERROR: This is a simulated error log";
+            sleep 5;
+          done;

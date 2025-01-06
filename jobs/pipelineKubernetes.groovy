@@ -4,7 +4,7 @@ pipeline {
   }
 
   environment {
-    KUBECONFIG = "C:\\Users\\loubr\\.kube\\config" // Ensure kubeconfig is set
+    KUBECONFIG = "C:\\Users\\me\\.kube\\config" // Ensure kubeconfig is set
   }
 
   stages {
@@ -20,26 +20,6 @@ pipeline {
         }
       }
     }
-
-    // stage('Building backend image') {
-    //   steps {
-    //     script {
-    //       dir('project_dev_ops\\webapi') {
-    //         webApiImage = docker.build("loubix/devopswebapi")
-    //       }
-    //     }
-    //   }
-    // }
-
-    // stage('Publish backend Image') {
-    //   steps {
-    //     script {
-    //       withDockerRegistry(credentialsId: 'dockerCredentials') {
-    //         webApiImage.push()
-    //       }
-    //     }
-    //   }
-    // }
 
     stage('Create Namespaces') {
         steps {

@@ -10,5 +10,5 @@ spec:
     - protocol: TCP
       port: 8080        # Port exposé dans le service
       targetPort: 8080  # Port du container
-      nodePort: 30001    # Port exposé sur le nœud
+      # nodePort: 30001    # Port exposé sur le nœud
   type: NodePort

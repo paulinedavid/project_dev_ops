@@ -1,0 +1,6 @@
+all:
+  hosts:
+    target_server:
+      ansible_host: <TARGET_SERVER_IP>
+      ansible_user: <USERNAME>
+      ansible_ssh_private_key_file: <PATH_TO_SSH_KEY>

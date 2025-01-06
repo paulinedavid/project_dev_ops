@@ -1,0 +1,41 @@
+global:
+  # Global settings for SMTP (email server)
+  smtp_smarthost: 'smtp.efre.com:***'   # Replace with your SMTP server
+  smtp_from: 'alertmanager@efre.com'      # Replace with your sender email address
+  smtp_auth_username: 'm@efre.com'
+  smtp_auth_password: '**** **** **** ****'
+
+route:
+  # Default route for alerts
+  group_by: ['alertname']                 # Group alerts by 'alertname'
+  group_wait: 30s                         # Wait time before sending the first alert
+  group_interval: 1m                      # Interval to wait before sending updates
+  repeat_interval: 1h                     # Minimum wait before resending the same alert
+  receiver: 'email-alerts'                # Default receiver for alerts
+
+  # Child routes (optional: to handle specific alert types differently)
+  routes:
+    - match:
+        severity: critical
+      receiver: 'email-alerts'            # Critical alerts sent to email
+    - match:
+        severity: warning
+      receiver: 'email-alerts'            # Warnings sent to email
+
+receivers:
+  # Receiver for email notifications
+  - name: 'email-alerts'
+    email_configs:
+      - to: 'l@efre.net'       # Recipient email address
+        send_resolved: true               # Notify when alert is resolved
+        headers:
+          subject: 'ArHuLoPa Alert: {{ .CommonLabels.alertname }}'
+        html: |
+          <html>
+          <body>
+            <h1>Alert: {{ .CommonLabels.alertname }}</h1>
+            <p><strong>Severity:</strong> {{ .CommonLabels.severity }}</p>
+            <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+            <p><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+          </body>
+          </html>

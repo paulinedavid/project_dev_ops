@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-webapi
+  namespace: production
+  labels:
+    app: webapi
+    environment: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+      - name: webapi
+        image: paulinedav/devopswebapi:latest
+        ports:
+        - containerPort: 8080
+          # hostPort: 8081

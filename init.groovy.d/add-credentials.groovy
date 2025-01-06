@@ -25,8 +25,8 @@ dockerCredentials = new UsernamePasswordCredentialsImpl(
     CredentialsScope.GLOBAL,
     'dockerCredentials', // credentialsId
     'Docker Hub credentials', // description
-    'paulinedav', // username
-    'dockerpauline' // password
+    'username', // username
+    'password' // password
 )
 
 credentials_store.addCredentials(global_domain, creds)

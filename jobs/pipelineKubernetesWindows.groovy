@@ -15,7 +15,7 @@ pipeline {
           deleteDir()
           bat '''
           git config --global --add safe.directory C:\\Users\\me\\.jenkins\\workspace\\pipeline
-          git clone -b kuberntes https://github.com/paulinedavid/project_dev_ops.git
+          git clone -b main https://github.com/paulinedavid/project_dev_ops.git
           '''
         }
       }

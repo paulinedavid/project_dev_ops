@@ -13,7 +13,7 @@ pipeline {
       steps {
         retry(3) { // Retry up to 3 times
           deleteDir()
-          git branch: 'kuberntes', url: 'https://github.com/paulinedavid/project_dev_ops.git'
+          git branch: 'main', url: 'https://github.com/paulinedavid/project_dev_ops.git'
         }
       }
     }

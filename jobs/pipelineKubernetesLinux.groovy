@@ -4,7 +4,7 @@ pipeline {
   }
 
   environment {
-    KUBECONFIG = "C:\\Users\\pauli\\.kube\\config" // Ensure kubeconfig is set
+    KUBECONFIG = "C:\\Users\\me\\.kube\\config" // Ensure kubeconfig is set
   }
 
   stages {

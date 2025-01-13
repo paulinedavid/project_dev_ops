@@ -1,0 +1,13 @@
+# This resource request is intentionally too high to make the pod unschedulable (test pod)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unschedulable-pod
+  namespace: default
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["sh", "-c", "sleep 3600"]
+  nodeSelector:
+    nonexistent-label: "true"

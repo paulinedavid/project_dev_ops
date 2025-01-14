@@ -39,7 +39,15 @@ pipeline {
 
     stage('Deploy backend container') {
       steps {
-        echo "Run  backend conatiner "
+        // Stop previous container
+        script {
+          sh 'docker stop dev-webapi-container || true'
+          sh 'docker rm dev-webapi-container || true'
+        }
+        // Run the container
+        script {
+          sh 'docker run -d --name dev-webapi-container -p 8081:8080 paulinedav/devopswebapi'
+        }
       }
     }
   }
